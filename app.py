@@ -8,6 +8,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 Bootstrap(app)
 
+
 ##CONNECT TO DB
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_element.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -16,19 +17,21 @@ db = SQLAlchemy(app)
 
 ##CONFIGURE TABLE
 class ElementTable(db.Model):
-    name = db.Column(db.Float)
-    x_cod = db.Column(db.String(250))
-    y_cod = db.Column(db.String(250))
-    height = db.Column(db.String(250))
-    width = db.Column(db.Text)
-    author = db.Column(db.String(250))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250))
+    x_cod = db.Column(db.Float)
+    y_cod = db.Column(db.Float)
+    height = db.Column(db.Float)
+    width = db.Column(db.Float)
+    author = db.Column(db.Float)
     img_url = db.Column(db.String(250))
+    image = db.Column(db.LargeBinary)
+
 # db.create_all()
 
 
-
 @app.route('/')
-def home_page(table_data):
+def home_page():
     table_data = []
     return render_template("home.html", table_data=table_data)
 
@@ -50,8 +53,10 @@ def get_website_url():
     print("website url", website_url)
     print("web elements data = ", element_data)
 
-
-
+    for
+    insert_data = ElementTable(
+        name=
+    )
     return redirect(url_for("home_page"))
 
 

@@ -10,12 +10,12 @@ from time import sleep
 
 chrome_path = 'D:\python_file\LearningProjects\chromedriver.exe'
 pytesseract.pytesseract.tesseract_cmd = 'D:\other\module\\tesseract.exe'
-driver = webdriver.Chrome(executable_path=chrome_path)
 
-driver.maximize_window()
 
 
 def open_website(url):
+    driver = webdriver.Chrome(executable_path=chrome_path)
+    driver.maximize_window()
     driver.get(url)
     sleep(1)
     screenshot = pyautogui.screenshot(region=(0, 150, 1900, 880))
@@ -25,12 +25,7 @@ def open_website(url):
 
 def display_and_save(screenshot):
     image = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-    cv2.imwrite("screenshort.png", image)
-
-    # development only
-    cv2.imshow(f"static/img/scrap_img/screenshort", image)
-    cv2.waitKey()
-
+    cv2.imwrite("static/img/scrap_img/screenshort.png", image)
     return image
 
 
@@ -75,7 +70,8 @@ def get_web_elements(detected_data, image):
 
             element_set.add(box_data)
             element_data.append({
-                'image': f'img/scrap_img/{box_data}.png',
+                'image': img,
+                'img_url': f'img/scrap_img/{box_data}.png',
                 'name': box_data,
                 'x_cod': x,
                 'y_cod': y,
@@ -85,8 +81,6 @@ def get_web_elements(detected_data, image):
 
     rect = cv2.cvtColor(np.array(rect), cv2.COLOR_RGB2BGR)
     cv2.imwrite(f"static/img/scrap_img/website_box.png", rect)
-    cv2.imshow(f"static/img/scrap_img/website_box.png", rect)
-    cv2.waitKey()
     return element_data
 
 
