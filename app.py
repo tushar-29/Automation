@@ -25,6 +25,7 @@ class ElementTable(db.Model):
     width = db.Column(db.Integer)
     author = db.Column(db.Integer)
     img_url = db.Column(db.String(250))
+    website = db.Column(db.String(300))
 
 
 class WebsiteTable(db.Model):
@@ -34,15 +35,18 @@ class WebsiteTable(db.Model):
 
 db.create_all()
 
+
 @app.route('/')
 def home_page():
-    table_data = ElementTable.query.all()
+    table_data = []
     return render_template("home.html", table_data=table_data)
+
 
 @app.route("/post/<int:element_id>")
 def show_element(element_id):
     requested_element = ElementTable.query.get(element_id)
     return render_template("element.html", element=requested_element)
+
 
 @app.route("/about")
 def about():
@@ -57,22 +61,26 @@ def contact():
 @app.route("/", methods=["POST"])
 def get_website_url():
     website_url = request.form.get("website_url")
-    element_data = get_website_data(website_url)
-    print("website url", website_url)
+    table_data = ElementTable.query.filter_by(website=website_url).all()
+    print(table_data)
+    if not table_data:
+        element_data = get_website_data(website_url)
+        print("website url", website_url)
+        for data in element_data:
+            insert_data = ElementTable(
+                name=data['name'],
+                x_cod=data['x_cod'],
+                y_cod=data['y_cod'],
+                height=data['height'],
+                width=data['width'],
+                img_url=data['img_url'],
+                website=website_url,
+            )
+            db.session.add(insert_data)
+            db.session.commit()
+            table_data = ElementTable.query.filter_by(website=website_url).all()
 
-    for data in element_data:
-        insert_data = ElementTable(
-            name=data['name'],
-            x_cod=data['x_cod'],
-            y_cod=data['y_cod'],
-            height=data['height'],
-            width=data['width'],
-            img_url=data['img_url'],
-        )
-        db.session.add(insert_data)
-        db.session.commit()
-
-    return redirect(url_for("home_page"))
+    return render_template("home.html", table_data=table_data)
 
 
 @app.route("/delete/<int:element_id>")
@@ -94,7 +102,7 @@ def edit_element(element_id):
         element.x_cod = int(request.form.get('x_cod'))
         element.y_cod = int(request.form.get('y_cod'))
 
-        element = custom_detection(element)
+        element = custom_detection(element, element.website)
         edit_element = ElementTable(
             name=element.name,
             x_cod=element.x_cod,
@@ -102,6 +110,7 @@ def edit_element(element_id):
             height=element.height,
             width=element.width,
             img_url=element.img_url,
+            website=element.website,
         )
         db.session.commit()
         return redirect(url_for("show_element", element_id=element.id))

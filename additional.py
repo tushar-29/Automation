@@ -1,1 +1,4 @@
-a, b, c, d = 1, 2, 3, 4
+
+l = "https://www.myntra.com/"
+print(l[12:-5])
+

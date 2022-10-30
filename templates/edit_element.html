@@ -32,8 +32,12 @@
           <label for="width">Width</label>
         <input name="width" id="width" type="number" value="{{ element.width }}">
           <button type="submit">Save</button>
+          <label for="id_image">Image</label><br>
+          <input type="file" id="id_image" name="image" accept="image/*">
+
           </div>
         </form>
+        <img src="{{ url_for('static', filename=element.img_url) }}" />
     </div>
   </div>
 

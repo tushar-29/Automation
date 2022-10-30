@@ -22,9 +22,9 @@ def open_website(url):
     return screenshot
 
 
-def display_and_save(screenshot):
+def display_and_save(screenshot, WEBSITE_URL):
     image = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-    cv2.imwrite("static/img/scrap_img/screenshort.png", image)
+    cv2.imwrite(f"static/img/scrap_img/{WEBSITE_URL[12:-5]}.png", image)
     return image
 
 
@@ -44,7 +44,7 @@ def image_processing(image):
     return contours
 
 
-def get_web_elements(detected_data, image):
+def get_web_elements(detected_data, image, WEBSITE_URL):
     element_set = set()
     element_data = []
     for element in detected_data:
@@ -78,7 +78,7 @@ def get_web_elements(detected_data, image):
             })
 
     rect = cv2.cvtColor(np.array(rect), cv2.COLOR_RGB2BGR)
-    cv2.imwrite(f"static/img/scrap_img/website_box.png", rect)
+    cv2.imwrite(f"static/img/scrap_img/{WEBSITE_URL[12:-5]}_box.png", rect)
     return element_data
 
 
@@ -86,28 +86,27 @@ def get_web_elements(detected_data, image):
 def get_website_data(url):
     WEBSITE_URL = url
     screenshot = open_website(WEBSITE_URL)
-    image = display_and_save(screenshot)
+    image = display_and_save(screenshot, WEBSITE_URL)
     detected_regions = image_processing(image)
-    element_data = get_web_elements(detected_regions, image)
+    element_data = get_web_elements(detected_regions, image, WEBSITE_URL)
     return element_data
 
 
-def custom_detection(element_data):
+def custom_detection(element_data, url):
     x_cod, y_cod, height, width = element_data.x_cod, element_data.y_cod, element_data.height, element_data.width
-    image = cv2.imread(f"static/img/scrap_img/screenshort.png", cv2.IMREAD_COLOR)
+    image = cv2.imread(f"static/img/scrap_img/{url[12:-5]}.png", cv2.IMREAD_COLOR)
 
     cropped_box = image[y_cod:(y_cod + height), x_cod:(x_cod + width)]
-
-    box_data = pytesseract.image_to_string(cropped_box)
-    element_data.name = re.sub('\s+', '', box_data)
-
     new_crop_img = cv2.cvtColor(np.array(cropped_box), cv2.COLOR_RGB2BGR)
+    box_data = pytesseract.image_to_string(new_crop_img)
+    element_data.name = re.sub('\s+', '', box_data)
     cv2.imwrite(f"static/img/scrap_img/{element_data.name}.png", new_crop_img)
-    element_data.img_url = f"static/img/scrap_img/{element_data.name}.png"
+    element_data.img_url = f"img/scrap_img/{element_data.name}.png"
 
-    rect = cv2.rectangle(image, (x_cod, y_cod), (x_cod + width, y_cod + height), (0, 255, 0), 2)
+    box_img = cv2.imread(f"static/img/scrap_img/{url[12:-5]}_box.png", cv2.IMREAD_COLOR)
+    rect = cv2.rectangle(box_img, (x_cod, y_cod), (x_cod + width, y_cod + height), (0, 255, 0), 2)
     rect = cv2.cvtColor(np.array(rect), cv2.COLOR_RGB2BGR)
-    cv2.imwrite(f"static/img/scrap_img/website_box.png", rect)
+    cv2.imwrite(f"static/img/scrap_img/{url[12:-5]}_box.png", rect)
 
     return element_data
 

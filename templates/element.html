@@ -24,6 +24,8 @@
               <p class="subheading">{{element.y_cod}}</p>
               <p class="subheading">{{element.height}}</p>
               <p class="subheading">{{element.width}}</p>
+                <p class="subheading">{{element.img_url}}</p>
+            <img src="{{ url_for('static', filename=element.img_url) }}" />
           <hr>
            <div class="clearfix">
           <a class="btn btn-primary float-right" href="{{url_for('edit_element', element_id=element.id)}}">Edit Element</a>
