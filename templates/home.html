@@ -15,8 +15,10 @@
   <div>
       {% for data in table_data %}
           <div>
-{#              <a href="{{ url_for('show_element', element_id=data.id) }}"></a>#}
-{#              <a href="{{url_for('delete_post', post_id=data.id) }}">✘</a>#}
+            <h1>
+              <a href="{{ url_for('show_element', element_id=data.id) }}">{{ data.name }}</a>
+            </h1>
+              <a href="{{url_for('delete_element', element_id=data.id) }}">✘</a>
           </div>
           <hr>
       {% endfor %}

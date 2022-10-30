@@ -1,0 +1,41 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{% include "header.html" %}
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('{{ url_for('static', filename='img/edit-bg.jpg')}}')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1>Edit Element</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+        <form action="{{ url_for("edit_element", element_id=element.id)}}" method="post">
+      <div class="col-lg-8 col-md-10 mx-auto">
+          <label for="name">Element Name</label>
+        <input name="name" id="name" type="text" value="{{ element.name }}">
+          <label for="x_cod">X Coordinate</label>
+        <input name="x_cod" id="x_cod" type="number" value="{{ element.x_cod }}">
+          <label for="y_cod">y Coordinate</label>
+        <input name="y_cod" id="y_cod" type="number" value="{{ element.y_cod }}">
+          <label for="height">Height</label>
+        <input name="height" id="height" type="number" value="{{ element.height }}">
+          <label for="width">Width</label>
+        <input name="width" id="width" type="number" value="{{ element.width }}">
+          <button type="submit">Save</button>
+          </div>
+        </form>
+    </div>
+  </div>
+
+{% include "footer.html" %}
+{% endblock %}

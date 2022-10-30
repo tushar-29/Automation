@@ -1,5 +1,3 @@
-'https://pyimagesearch.com/2018/08/20/opencv-text-detection-east-text-detector/'
-
 import cv2
 import numpy as np
 from selenium import webdriver
@@ -7,6 +5,7 @@ import pyautogui
 import pytesseract
 import re
 from time import sleep
+
 
 chrome_path = 'D:\python_file\LearningProjects\chromedriver.exe'
 pytesseract.pytesseract.tesseract_cmd = 'D:\other\module\\tesseract.exe'
@@ -70,7 +69,6 @@ def get_web_elements(detected_data, image):
 
             element_set.add(box_data)
             element_data.append({
-                'image': img,
                 'img_url': f'img/scrap_img/{box_data}.png',
                 'name': box_data,
                 'x_cod': x,
@@ -91,9 +89,33 @@ def get_website_data(url):
     image = display_and_save(screenshot)
     detected_regions = image_processing(image)
     element_data = get_web_elements(detected_regions, image)
-    print(element_data)
-    print("ended")
     return element_data
 
+
+def custom_detection(element_data):
+    x_cod, y_cod, height, width = element_data.x_cod, element_data.y_cod, element_data.height, element_data.width
+    image = cv2.imread(f"static/img/scrap_img/screenshort.png", cv2.IMREAD_COLOR)
+
+    cropped_box = image[y_cod:(y_cod + height), x_cod:(x_cod + width)]
+
+    box_data = pytesseract.image_to_string(cropped_box)
+    element_data.name = re.sub('\s+', '', box_data)
+
+    new_crop_img = cv2.cvtColor(np.array(cropped_box), cv2.COLOR_RGB2BGR)
+    cv2.imwrite(f"static/img/scrap_img/{element_data.name}.png", new_crop_img)
+    element_data.img_url = f"static/img/scrap_img/{element_data.name}.png"
+
+    rect = cv2.rectangle(image, (x_cod, y_cod), (x_cod + width, y_cod + height), (0, 255, 0), 2)
+    rect = cv2.cvtColor(np.array(rect), cv2.COLOR_RGB2BGR)
+    cv2.imwrite(f"static/img/scrap_img/website_box.png", rect)
+
+    return element_data
+
+
 if __name__ == "__main__":
-    get_website_data('https://www.myntra.com/')
+    element_data = get_website_data('https://www.myntra.com/')
+    for data in element_data:
+        print(data['img_url'])
+        print(data['name'])
+        print(data['x_cod'])
+        print()
