@@ -63,12 +63,12 @@ def contact():
 @app.route("/", methods=["POST"])
 def get_website_url():
     global website_url
+    print("1) website url form net = ", request.form.get("website_url"))
     website_url = request.form.get("website_url")
     table_data = ElementTable.query.filter_by(website=website_url[12:12+5]).all()
-    print(table_data)
+    print("2) table data search = ", table_data)
     if not table_data:
         element_data = get_website_data(website_url)
-        print("website url", website_url)
         for data in element_data:
             insert_data = ElementTable(
                 name=data['name'],
@@ -77,11 +77,12 @@ def get_website_url():
                 height=data['height'],
                 width=data['width'],
                 img_url=data['img_url'],
-                website=website_url,
+                website=website_url[12:12+5],
             )
             db.session.add(insert_data)
             db.session.commit()
             table_data = ElementTable.query.filter_by(website=website_url[12:12+5]).all()
+            print("3) table data when it was empty = ", table_data)
 
     return render_template("home.html", table_data=table_data, website_url=website_url)
 
