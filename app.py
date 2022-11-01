@@ -3,6 +3,8 @@ from SearchElement import get_website_data, custom_detection
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from types import SimpleNamespace
+import json
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -163,6 +165,24 @@ def add_new_element():
         "website": website_url[12:12 + 5],
     }
     return render_template("edit_element.html", element=element, is_edit=False)
+
+
+@app.route("/web-control-api/<url>", methods=["GET", "POST"])
+def create_api(url):
+    table_data = ElementTable.query.filter_by(website=url).all()
+    json_element = []
+    for data in table_data:
+        json_element.append({
+            'name': data.name,
+            'x_cod': data.x_cod,
+            'y_cod': data.y_cod,
+            'height': data.height,
+            'width': data.width,
+            'img_url': data.img_url,
+            "website": data.website,
+        })
+
+    return json.dumps(json_element)
 
 
 if __name__ == "__main__":

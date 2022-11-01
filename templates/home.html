@@ -14,10 +14,12 @@
                       <div class="row">
                           {% if website_url: %}
                           <input name="website_url" id="website_url" type="url" value="{{ website_url }}" />
+                              <button id="id_api_link" type="button" onclick="getApi('{{ website_url[12:17] }}')">COPY API LINK</button>
                           {% else %}
                           <input name="website_url" id="website_url" type="url" placeholder="Enter the website url" />
                           {% endif %}
                       <button class="btn btn-secondary" type="submit">Get Elements</button>
+
                       </div>
                   </form>
               </div>
@@ -52,5 +54,19 @@
       </div>
   </div>
 <hr>
+<script>
+    function getApi(web_url) {
+        const url = "http://127.0.0.1:5000/web-control-api/" + web_url;
+        console.log(url)
+        // Copy the text inside the text field
+        try {
+        navigator.clipboard.writeText(url);
+            console.log('Content copied to clipboard');
+        } catch (err) {
+        console.error('Failed to copy: ', err);
+        }
+        alert("API LINK = " + url);
+    }
+</script>
 
 {% include "footer.html" %}
