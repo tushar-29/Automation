@@ -35,6 +35,7 @@ db.create_all()
 
 website_url = None
 
+
 @app.route('/')
 def home_page():
     table_data = []
