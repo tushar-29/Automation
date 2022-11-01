@@ -1,5 +1,7 @@
-{% extends 'bootstrap/base.html' %}
-{% import "bootstrap/wtf.html" as wtf %}
+{##}
+{#{% extends 'bootstrap/base.html' %}#}
+{#{% import "bootstrap/wtf.html" as wtf %}#}
+
 
 {% block content %}
 {% include "header.html" %}
@@ -10,36 +12,51 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="page-heading">
-            <h1>Edit Element</h1>
-          </div>
+            {% if is_edit: %}
+            <h1>Edit Post</h1>
+            {% else: %}
+            <h1>New Post</h1>
+            {% endif %}
         </div>
       </div>
+    </div>
     </div>
   </header>
 
   <div class="container">
+  {% if is_edit and present: %}
+        <h2>This Control Already Exist</h2>
+  {% endif %}
     <div class="row">
-        <form action="{{ url_for("edit_element", element_id=element.id)}}" method="post">
-      <div class="col-lg-8 col-md-10 mx-auto">
+        {% if is_edit: %}
+        <form action="{{ url_for("edit_element", element_id=element.id)}}" id="post-form" method="post">
+        {% else: %}
+            <form action="{{ url_for("add_new_element")}}" id="post-form" method="post">
+        {% endif %}
+      <div class="col-lg-8 col-md-10 mx-auto form-group">
+          <img src="{{ url_for('static', filename=element.img_url) }}" alt="{{ element.name }}" />
           <label for="name">Element Name</label>
-        <input name="name" id="name" type="text" value="{{ element.name }}">
+        <input name="name" id="name" type="text" value="{{ element.name }}" required>
           <label for="x_cod">X Coordinate</label>
-        <input name="x_cod" id="x_cod" type="number" value="{{ element.x_cod }}">
+        <input name="x_cod" id="x_cod" type="number" value="{{ element.x_cod }}" required>
           <label for="y_cod">y Coordinate</label>
-        <input name="y_cod" id="y_cod" type="number" value="{{ element.y_cod }}">
+        <input name="y_cod" id="y_cod" type="number" value="{{ element.y_cod }}" required>
           <label for="height">Height</label>
-        <input name="height" id="height" type="number" value="{{ element.height }}">
+        <input name="height" id="height" type="number" value="{{ element.height }}" required >
           <label for="width">Width</label>
-        <input name="width" id="width" type="number" value="{{ element.width }}">
-          <button type="submit">Save</button>
-          <label for="id_image">Image</label><br>
-          <input type="file" id="id_image" name="image" accept="image/*">
+        <input name="width" id="width" type="number" value="{{ element.width }}" required>
 
+
+          <div id="image-box" class="image-container">
+              <img id="image" src="/static/img/scrap_img/{{element.website}}.png" alt="NOT_FOUND" />
+          </div>
+          <button class="btn btn-outline-info" id="confirm-btn"  type="submit">Save</button>
           </div>
         </form>
-        <img src="{{ url_for('static', filename=element.img_url) }}" />
+
     </div>
   </div>
 
+    <script src="{{url_for('static', filename='js/script.js')}}"></script>
 {% include "footer.html" %}
 {% endblock %}

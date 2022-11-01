@@ -11,20 +11,19 @@ chrome_path = 'D:\python_file\LearningProjects\chromedriver.exe'
 pytesseract.pytesseract.tesseract_cmd = 'D:\other\module\\tesseract.exe'
 
 
-
 def open_website(url):
     driver = webdriver.Chrome(executable_path=chrome_path)
     driver.maximize_window()
     driver.get(url)
     sleep(1)
-    screenshot = pyautogui.screenshot(region=(0, 150, 1900, 880))
+    screenshot = pyautogui.screenshot(region=(0, 150, 1920, 880))
     driver.close()
     return screenshot
 
 
 def display_and_save(screenshot, WEBSITE_URL):
     image = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-    cv2.imwrite(f"static/img/scrap_img/{WEBSITE_URL[12:-5]}.png", image)
+    cv2.imwrite(f"static/img/scrap_img/{WEBSITE_URL[12:12+5]}.png", image)
     return image
 
 
@@ -78,7 +77,7 @@ def get_web_elements(detected_data, image, WEBSITE_URL):
             })
 
     rect = cv2.cvtColor(np.array(rect), cv2.COLOR_RGB2BGR)
-    cv2.imwrite(f"static/img/scrap_img/{WEBSITE_URL[12:-5]}_box.png", rect)
+    cv2.imwrite(f"static/img/scrap_img/{WEBSITE_URL[12:12+5]}_box.png", rect)
     return element_data
 
 
@@ -94,19 +93,18 @@ def get_website_data(url):
 
 def custom_detection(element_data, url):
     x_cod, y_cod, height, width = element_data.x_cod, element_data.y_cod, element_data.height, element_data.width
-    image = cv2.imread(f"static/img/scrap_img/{url[12:-5]}.png", cv2.IMREAD_COLOR)
+    image = cv2.imread(f"static/img/scrap_img/{url}.png", cv2.IMREAD_COLOR)
 
     cropped_box = image[y_cod:(y_cod + height), x_cod:(x_cod + width)]
     new_crop_img = cv2.cvtColor(np.array(cropped_box), cv2.COLOR_RGB2BGR)
     box_data = pytesseract.image_to_string(new_crop_img)
-    element_data.name = re.sub('\s+', '', box_data)
     cv2.imwrite(f"static/img/scrap_img/{element_data.name}.png", new_crop_img)
     element_data.img_url = f"img/scrap_img/{element_data.name}.png"
 
-    box_img = cv2.imread(f"static/img/scrap_img/{url[12:-5]}_box.png", cv2.IMREAD_COLOR)
+    box_img = cv2.imread(f"static/img/scrap_img/{url}_box.png", cv2.IMREAD_COLOR)
     rect = cv2.rectangle(box_img, (x_cod, y_cod), (x_cod + width, y_cod + height), (0, 255, 0), 2)
     rect = cv2.cvtColor(np.array(rect), cv2.COLOR_RGB2BGR)
-    cv2.imwrite(f"static/img/scrap_img/{url[12:-5]}_box.png", rect)
+    cv2.imwrite(f"static/img/scrap_img/{url}_box.png", rect)
 
     return element_data
 

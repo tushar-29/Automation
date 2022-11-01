@@ -12,7 +12,11 @@
                   </div>
                   <form action="{{ url_for("get_website_url")}}" method="post">
                       <div class="row">
-                      <input name="website_url" id="website_url" type="url" placeholder="Enter the website url" />
+                          {% if website_url: %}
+                          <input name="website_url" id="website_url" type="url" value="{{ website_url }}" />
+                          {% else %}
+                          <input name="website_url" id="website_url" type="url" placeholder="Enter the website url" />
+                          {% endif %}
                       <button class="btn btn-secondary" type="submit">Get Elements</button>
                       </div>
                   </form>
@@ -25,6 +29,11 @@
   <div class="container">
       <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
+          {% if website_url: %}
+          <div>
+              <a href="{{url_for('add_new_element')}}">ADD Element</a>
+          </div>
+          {% endif %}
               {% for data in table_data %}
                   <div class="post-preview">
                       <a href="{{ url_for('show_element', element_id=data.id) }}">
