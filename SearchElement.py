@@ -35,7 +35,7 @@ def image_processing(image):
 
     # Kernel size increases or decreases the area of the rectangle to be detected.
     # A smaller value like (10, 10) will detect each word instead of a sentence.
-    rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (25, 25))
+    rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
 
     dilation = cv2.dilate(thresh1, rect_kernel, iterations=1)
     contours, hierarchy = cv2.findContours(dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
