@@ -171,15 +171,21 @@ def add_new_element():
 def create_api(url):
     table_data = ElementTable.query.filter_by(website=url).all()
     json_element = []
-    for data in table_data:
+    if len(table_data) != 0:
+        for data in table_data:
+            json_element.append({
+                'name': data.name,
+                'x_cod': data.x_cod,
+                'y_cod': data.y_cod,
+                'height': data.height,
+                'width': data.width,
+                'img_url': data.img_url,
+                "website": data.website,
+            })
+    else:
         json_element.append({
-            'name': data.name,
-            'x_cod': data.x_cod,
-            'y_cod': data.y_cod,
-            'height': data.height,
-            'width': data.width,
-            'img_url': data.img_url,
-            "website": data.website,
+            'error': 'This website data does not exist',
+            'statusCode': 404,
         })
 
     return json.dumps(json_element)

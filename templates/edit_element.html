@@ -6,16 +6,16 @@
 {% block content %}
 {% include "header.html" %}
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('{{ url_for('static', filename='img/edit-bg.jpg')}}')">
+  <header class="masthead" style="background-image: url('{{ url_for('static', filename='img/edit-add.jpg')}}')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="page-heading">
             {% if is_edit: %}
-            <h1>Edit Post</h1>
+            <h1>Edit Control</h1>
             {% else: %}
-            <h1>New Post</h1>
+            <h1>Add Control</h1>
             {% endif %}
         </div>
       </div>
@@ -27,29 +27,52 @@
   {% if is_edit and present: %}
         <h2>This Control Already Exist</h2>
   {% endif %}
-    <div class="row">
+    <div>
         {% if is_edit: %}
         <form action="{{ url_for("edit_element", element_id=element.id)}}" id="post-form" method="post">
         {% else: %}
             <form action="{{ url_for("add_new_element")}}" id="post-form" method="post">
         {% endif %}
-      <div class="col-lg-8 col-md-10 mx-auto form-group">
-          <img src="{{ url_for('static', filename=element.img_url) }}" alt="{{ element.name }}" />
-          <label for="name">Element Name</label>
-        <input name="name" id="name" type="text" value="{{ element.name }}" required>
-          <label for="x_cod">X Coordinate</label>
-        <input name="x_cod" id="x_cod" type="number" value="{{ element.x_cod }}" required>
-          <label for="y_cod">y Coordinate</label>
-        <input name="y_cod" id="y_cod" type="number" value="{{ element.y_cod }}" required>
-          <label for="height">Height</label>
-        <input name="height" id="height" type="number" value="{{ element.height }}" required >
-          <label for="width">Width</label>
-        <input name="width" id="width" type="number" value="{{ element.width }}" required>
+          <div class="form-group add__edit__controls">
 
-          <div id="image-box" class="image-container">
-              <img id="image" src="/static/img/scrap_img/{{element.website}}.png" alt="NOT_FOUND" />
+          <div class="row add__edit__box">
+            <label for="name">Element Name</label>
+            <input name="name" id="name" type="text" value="{{ element.name }}" required>
           </div>
-          <button class="btn btn-outline-info" id="confirm-btn"  type="submit">Save</button>
+          <hr />
+          <div class="row add__edit__box">
+            <label for="x_cod">X Coordinate</label>
+              <input name="x_cod" id="x_cod" type="number" value="{{ element.x_cod }}" required>
+          </div>
+          <hr />
+          <div class="row add__edit__box">
+            <label for="y_cod">y Coordinate</label>
+              <input name="y_cod" id="y_cod" type="number" value="{{ element.y_cod }}" required>
+          </div>
+          <hr />
+          <div class="row add__edit__box">
+          <label for="height">Height</label>
+            <input name="height" id="height" type="number" value="{{ element.height }}" required >
+          </div>
+          <hr />
+          <div class="row add__edit__box">
+            <label for="width">Width</label>
+            <input name="width" id="width" type="number" value="{{ element.width }}" required>
+          </div>
+          <hr />
+        </div>
+        <div id="add__edit__controls">
+              {% if is_edit: %}
+                  <div class="control__img">
+                    <img src="{{ url_for('static', filename=element.img_url) }}" alt="{{ element.name }}" class="control__img_brd" />
+                  </div>
+                  <hr />
+              {% endif %}
+          <div id="image-box" class="image-container">
+              <img id="image" src="/static/img/scrap_img/{{element.website}}.png" alt="NOT_FOUND"/>
+          </div>
+          <hr />
+          <button class="btn btn-outline-primary btn-lg btn-block" id="confirm-btn"  type="submit">Save</button>
           </div>
         </form>
 
