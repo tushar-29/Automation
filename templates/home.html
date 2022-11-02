@@ -38,7 +38,11 @@
       <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
           {% if website_url: %}
+
           <div>
+          <div>
+              <img src="/static/img/scrap_img/{{ website_url[12:17] }}_box.png" alt="box_image" id="box__main__image" />
+          </div>
               <a class="btn btn-primary btn-lg btn-block" href="{{url_for('add_new_element')}}" id="add__element">Add Element</a>
           </div>
               <hr />

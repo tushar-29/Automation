@@ -64,11 +64,8 @@ def contact():
 
 @app.route("/", methods=["POST"])
 def get_website_url():
-    global website_url
-    print("1) website url form net = ", request.form.get("website_url"))
     website_url = request.form.get("website_url")
     table_data = ElementTable.query.filter_by(website=website_url[12:12+5]).all()
-    print("2) table data search = ", table_data)
     if not table_data:
         element_data = get_website_data(website_url)
         for data in element_data:
@@ -84,7 +81,6 @@ def get_website_url():
             db.session.add(insert_data)
             db.session.commit()
             table_data = ElementTable.query.filter_by(website=website_url[12:12+5]).all()
-            print("3) table data when it was empty = ", table_data)
 
     return render_template("home.html", table_data=table_data, website_url=website_url)
 
@@ -107,6 +103,7 @@ def edit_element(element_id):
         element.height = int(request.form.get('height'))
         element.x_cod = int(request.form.get('x_cod'))
         element.y_cod = int(request.form.get('y_cod'))
+        element.website = website_url[12:17]
 
         element = custom_detection(element, element.website)
         edit_element = ElementTable(
@@ -137,10 +134,10 @@ def add_new_element():
         element['x_cod'] = int(request.form.get('x_cod'))
         element['y_cod'] = int(request.form.get('y_cod'))
         element['img_url'] = ""
-        element['website'] = website_url[12:12+5]
+        element['website'] = website_url[12:17]
 
         element = SimpleNamespace(**element)
-        modi_element = custom_detection(element, website_url[12:12+5])
+        modi_element = custom_detection(element, website_url[12:17])
 
         new_element = ElementTable(
             name=modi_element.name,

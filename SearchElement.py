@@ -73,11 +73,12 @@ def get_web_elements(detected_data, image, WEBSITE_URL):
                 'x_cod': x,
                 'y_cod': y,
                 'height': h,
-                'width': w
+                'width': w,
+                'website': WEBSITE_URL[12:17]
             })
 
     rect = cv2.cvtColor(np.array(rect), cv2.COLOR_RGB2BGR)
-    cv2.imwrite(f"static/img/scrap_img/{WEBSITE_URL[12:12+5]}_box.png", rect)
+    cv2.imwrite(f"static/img/scrap_img/{WEBSITE_URL[12:17]}_box.png", rect)
     return element_data
 
 

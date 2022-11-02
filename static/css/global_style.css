@@ -64,5 +64,11 @@ body {
 }
 
 .control__img_brd {
-    border: 5px solid black;
+    border: 5px solid #1d2124;
+}
+
+#box__main__image {
+    height: 50vh;
+    width: 100vh;
+    margin-bottom: 2rem;
 }
