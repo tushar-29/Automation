@@ -7,7 +7,6 @@ const width_box = document.getElementById('width')
 const x_cod_box = document.getElementById('x_cod')
 const y_cod_box = document.getElementById('y_cod')
 
-
 const image = document.getElementById('image');
 
 console.log("its working");

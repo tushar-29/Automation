@@ -10,8 +10,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 Bootstrap(app)
 
+
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_element.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_scanning.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -20,17 +21,13 @@ db = SQLAlchemy(app)
 class ElementTable(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250))
+    main_name = db.Column(db.String(250))
     x_cod = db.Column(db.Integer)
     y_cod = db.Column(db.Integer)
     height = db.Column(db.Integer)
     width = db.Column(db.Integer)
     img_url = db.Column(db.String(250))
     website = db.Column(db.String(300))
-
-
-class WebsiteTable(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    web_url = db.Column(db.String(250))
 
 
 db.create_all()
@@ -40,9 +37,10 @@ website_url = None
 
 @app.route('/')
 def home_page():
+    print("home website = ", website_url)
     table_data = []
     if website_url:
-        table_data = ElementTable.query.filter_by(website=website_url[12:12+5]).all()
+        table_data = ElementTable.query.filter_by(website=website_url[12:17]).all()
     return render_template("home.html", table_data=table_data, website_url=website_url)
 
 
@@ -64,13 +62,18 @@ def contact():
 
 @app.route("/", methods=["POST"])
 def get_website_url():
+    global website_url
     website_url = request.form.get("website_url")
-    table_data = ElementTable.query.filter_by(website=website_url[12:12+5]).all()
+    if not website_url:
+        return render_template("home.html", table_data=[], website_url=website_url)
+
+    table_data = ElementTable.query.filter_by(website=website_url[12:17]).all()
     if not table_data:
         element_data = get_website_data(website_url)
         for data in element_data:
             insert_data = ElementTable(
                 name=data['name'],
+                main_name=data['main_name'],
                 x_cod=data['x_cod'],
                 y_cod=data['y_cod'],
                 height=data['height'],
@@ -80,7 +83,7 @@ def get_website_url():
             )
             db.session.add(insert_data)
             db.session.commit()
-            table_data = ElementTable.query.filter_by(website=website_url[12:12+5]).all()
+            table_data = ElementTable.query.filter_by(website=website_url[12:17]).all()
 
     return render_template("home.html", table_data=table_data, website_url=website_url)
 
@@ -90,6 +93,7 @@ def delete_element(element_id):
     element_to_delete = ElementTable.query.get(element_id)
     db.session.delete(element_to_delete)
     db.session.commit()
+    print("del website = ", website_url)
     return redirect(url_for('home_page'))
 
 
@@ -103,11 +107,12 @@ def edit_element(element_id):
         element.height = int(request.form.get('height'))
         element.x_cod = int(request.form.get('x_cod'))
         element.y_cod = int(request.form.get('y_cod'))
-        element.website = website_url[12:17]
+        element.main_name = str(request.form.get('main_name'))
 
         element = custom_detection(element, element.website)
         edit_element = ElementTable(
             name=element.name,
+            main_name=element.main_name,
             x_cod=element.x_cod,
             y_cod=element.y_cod,
             height=element.height,
@@ -135,12 +140,15 @@ def add_new_element():
         element['y_cod'] = int(request.form.get('y_cod'))
         element['img_url'] = ""
         element['website'] = website_url[12:17]
+        element['main_name'] = ""
+
 
         element = SimpleNamespace(**element)
         modi_element = custom_detection(element, website_url[12:17])
 
         new_element = ElementTable(
             name=modi_element.name,
+            main_name=modi_element.main_name,
             x_cod=modi_element.x_cod,
             y_cod=modi_element.y_cod,
             height=modi_element.height,
@@ -159,7 +167,8 @@ def add_new_element():
         'height': 0,
         'width': 0,
         'img_url': "",
-        "website": website_url[12:12 + 5],
+        "website": website_url[12:17],
+        "main_name": ""
     }
     return render_template("edit_element.html", element=element, is_edit=False)
 
@@ -172,6 +181,7 @@ def create_api(url):
         for data in table_data:
             json_element.append({
                 'name': data.name,
+                'main_name': data.main_name,
                 'x_cod': data.x_cod,
                 'y_cod': data.y_cod,
                 'height': data.height,

@@ -12,25 +12,28 @@
 {#                  </div>#}
                   <form action="{{ url_for("get_website_url") }}" method="post">
                     <div class="site-heading">
+
                           {% if website_url: %}
                               <div class="input-group input-group-lg">
                                 <input name="website_url" id="website_url" type="url" value="{{ website_url }}" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
                               </div>
-                              <div class="row" id="generate__btn">
+{#                              <div class="row" id="generate__btn">#}
                               <button class="btn btn-dark col-lg-4" id="id_api_link" type="button" onclick="getApi('{{ website_url[12:17] }}')">GENERATE API LINK</button>
-                          {% else %}
+                          {% else: %}
                               <div class="input-group input-group-lg">
-                          <input name="website_url" id="website_url" type="url" placeholder="Enter the website url" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
+                                <input name="website_url" id="website_url" type="url" placeholder="Enter the website url" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
                               </div>
                           {% endif %}
                       <button class="btn btn-primary col-lg-4" type="submit">Get Elements</button>
-                        </div>
-                    </div>
-                      </div>
-                  </form>
+{#                    {% if website_url: %}#}
+{#                        </div>#}
+{#                    {% endif %}#}
+
+                </div>
+                </form>
+                </div>
               </div>
           </div>
-      </div>
   </header>
 
   <!-- Main Content -->
@@ -38,7 +41,6 @@
       <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
           {% if website_url: %}
-
           <div>
           <div>
               <img src="/static/img/scrap_img/{{ website_url[12:17] }}_box.png" alt="box_image" id="box__main__image" />
@@ -47,13 +49,14 @@
           </div>
               <hr />
           {% endif %}
-              {% for data in table_data %}
+              {% for data in table_data: %}
                   <div class="post-preview" id="control__element">
                       <a href="{{ url_for('show_element', element_id=data.id) }}">
-                          <h2 class="post-title">{{ data.name }}</h2>
+                          <h2 class="post-title" id="control__name">{{ data.name }}</h2>
                       </a>
-                      <h3>
-                          <a href="{{url_for('delete_element', element_id=data.id) }}">✘</a>
+                      <h3 class="edit__add__control">
+                          <a class="btn-sm btn-outline-primary" id="del__btn" href="{{url_for('delete_element', element_id=data.id) }}">DELETE</a>
+                          <a class="btn-sm btn-outline-primary" id="edit__btn" href="{{url_for('edit_element', element_id=data.id)}}">EDIT</a>
                       </h3>
                   </div>
                   <hr>

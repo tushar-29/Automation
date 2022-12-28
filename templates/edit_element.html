@@ -40,6 +40,13 @@
             <input name="name" id="name" type="text" value="{{ element.name }}" required>
           </div>
           <hr />
+              {% if is_edit: %}
+              <div class="row add__edit__box">
+                <label for="name">Element Main Name</label>
+                <input name="main_name" id="name" type="text" value="{{ element.main_name }}" required disabled>
+            </div>
+          <hr />
+              {% endif %}
           <div class="row add__edit__box">
             <label for="x_cod">X Coordinate</label>
               <input name="x_cod" id="x_cod" type="number" value="{{ element.x_cod }}" required>

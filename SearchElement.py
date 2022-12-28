@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 from selenium import webdriver
-import pyautogui
 import pytesseract
 import re
 from time import sleep
@@ -16,14 +15,10 @@ def open_website(url):
     driver.maximize_window()
     driver.get(url)
     sleep(1)
-    screenshot = pyautogui.screenshot(region=(0, 150, 1920, 880))
+    driver.get_screenshot_as_file(f"static/img/scrap_img/{url[12:17]}.png")
     driver.close()
-    return screenshot
-
-
-def display_and_save(screenshot, WEBSITE_URL):
-    image = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-    cv2.imwrite(f"static/img/scrap_img/{WEBSITE_URL[12:12+5]}.png", image)
+    image = cv2.imread(f"static/img/scrap_img/{url[12:17]}.png", cv2.IMREAD_COLOR)
+    image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     return image
 
 
@@ -74,7 +69,8 @@ def get_web_elements(detected_data, image, WEBSITE_URL):
                 'y_cod': y,
                 'height': h,
                 'width': w,
-                'website': WEBSITE_URL[12:17]
+                'website': WEBSITE_URL[12:17],
+                'main_name': box_data
             })
 
     rect = cv2.cvtColor(np.array(rect), cv2.COLOR_RGB2BGR)
@@ -82,14 +78,14 @@ def get_web_elements(detected_data, image, WEBSITE_URL):
     return element_data
 
 
-
 def get_website_data(url):
-    WEBSITE_URL = url
-    screenshot = open_website(WEBSITE_URL)
-    image = display_and_save(screenshot, WEBSITE_URL)
+    if not url or url == "":
+        return
+
+    image = open_website(url)
     detected_regions = image_processing(image)
-    element_data = get_web_elements(detected_regions, image, WEBSITE_URL)
-    return element_data
+    element = get_web_elements(detected_regions, image, url)
+    return element
 
 
 def custom_detection(element_data, url):
@@ -99,6 +95,11 @@ def custom_detection(element_data, url):
     cropped_box = image[y_cod:(y_cod + height), x_cod:(x_cod + width)]
     new_crop_img = cv2.cvtColor(np.array(cropped_box), cv2.COLOR_RGB2BGR)
     box_data = pytesseract.image_to_string(new_crop_img)
+
+    box_data = re.sub('\s+', '', box_data)
+
+    element_data.main_name = box_data
+
     cv2.imwrite(f"static/img/scrap_img/{element_data.name}.png", new_crop_img)
     element_data.img_url = f"img/scrap_img/{element_data.name}.png"
 

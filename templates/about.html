@@ -7,12 +7,9 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="page-heading">
-            <h4>
-                Why not incorporate self healing into our existing Java.net and Python
-                scripts. All automation frameworks have a central repository of objects
-                we simply need to replace it with the new repository we create with AI,
-                where we identify controls without their properties.
-            </h4>
+            <h2 id="problem_title">
+                Web Scanner For No Control AUTOMATION
+            </h2>
           </div>
         </div>
       </div>
@@ -23,21 +20,34 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <h3>Lorem ipsum dolor sit ametio</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius praesentium recusandae illo eaque architecto error, repellendus iusto reprehenderit, doloribus, minus sunt. Numquam at quae voluptatum in officia voluptas voluptatibus, minus!</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequuntur magnam, excepturi aliquid ex itaque esse est vero natus quae optio aperiam soluta voluptatibus corporis atque iste neque sit tempora!</p>
-      </div>
-    </div>
-        <hr>
-      <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        <h3>Lorem ipsum dolor sit amet</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius praesentium recusandae illo eaque architecto error, repellendus iusto reprehenderit, doloribus, minus sunt. Numquam at quae voluptatum in officia voluptas voluptatibus, minus!</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequuntur magnam, excepturi aliquid ex itaque esse est vero natus quae optio aperiam soluta voluptatibus corporis atque iste neque sit tempora!</p>
+        <p>Since the past few years, there are quite a few standard ways in the industry how one can find a specific element on a page using Selenium. One could search by the name of the tag, filter for a specific HTML class or HTML ID, or use CSS selectors or XPath expressions.</p><hr>
+        <h3>Problem Statement Description</h3>
+        <p>We need to identify controls without their properties of DOM or, <br> Find components without searching the page source.</p><hr>
+        <h3>Expected Outcome</h3>
+        <p>
+          - Target to build a repository of all the controls and elements on the webpage <br>
+          - Create a website with a grid listing the scanned objects <br>
+          - Give users the option to crop the element's area to ensure accurate identification <br>
+          - Provide the ability to scan missing elements, rename the controls or to use the controls to add new elements with their names <br>
+          - Write an API that returns all of these identified controls as webElements to consume the controls for automation in Java/.net/python <br>
+        </p><hr>
+        <h3>Tools & Technologies Used</h3>
+        <p>
+          - python and open source libraries <br>
+          - ovencv-python<br>
+          - numpy <br>
+          - selenium: webdriver <br>
+          - pytesseract <br>
+          - regular eexpressions <br>
+          - flask, render_template, redirect, url_for, request <br>
+          - SearchElement: get_website_data, custom_detection <br>
+          - sqlalchemy <br>
+          - bootstrap <br>
+          - json <br>
+        </p>
       </div>
     </div>
   </div>
-
   <hr>
 
   {% include "footer.html" %}
